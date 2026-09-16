@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple-computer-use"
+version = "0.1.0"
+description = "Give any agent computer use: screenshots, grounding, and GUI actions as a skill + CLI tools."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "simple-computer-use contributors" }]
+requires-python = ">=3.9"
+keywords = ["ai", "agent", "computer-use", "gui", "automation", "tools", "skill"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "pyautogui",
+    "pillow",
+    "pytesseract",
+    "pyperclip",
+    "requests",
+    'pyobjc-framework-Cocoa; sys_platform == "darwin"',
+    'pyobjc-framework-Quartz; sys_platform == "darwin"',
+]
+
+[project.optional-dependencies]
+# Local grounding model on Apple Silicon (downloaded on first use)
+local = ['mlx-vlm; sys_platform == "darwin" and platform_machine == "arm64"']
+# Optional MCP server for agents that speak the Model Context Protocol
+mcp = ["mcp"]
+dev = ["black"]
+
+[project.scripts]
+scu = "scu.cli:main"
+simple-computer-use = "scu.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["scu*"]
+
+[tool.setuptools.package-data]
+scu = ["py.typed", "skills/**/*"]

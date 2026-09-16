@@ -1,0 +1,17 @@
+simple-computer-use
+===================
+
+This project contains code and design adapted from Agent-S
+(https://github.com/simular-ai/Agent-S), Copyright Simular AI,
+licensed under the Apache License, Version 2.0.
+
+Adapted portions include: the visual-grounding prompt and coordinate
+resolution strategy (scu/grounding.py), the OCR word-box extraction
+(scu/ocr.py), and platform-aware action implementations (scu/actions.py).
+
+The Agent-S harness (agent loop, planner/reflection, trajectory memory,
+benchmark runners) is intentionally not included; this project provides the
+tool layer only, for use by any external agent.
+
+You may obtain a copy of the Apache License at
+    http://www.apache.org/licenses/LICENSE-2.0
