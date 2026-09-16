@@ -36,10 +36,14 @@ the *agent you already use* is the brain; `scu` is the hands and eyes.
 ## Install
 
 ```bash
-git clone <this repo> && cd simple-computer-use
-pip install .
+git clone https://github.com/simple-techdev/simple-computer-use && cd simple-computer-use
+pipx install .        # recommended: isolated env, `scu` on PATH
+# or: python3 -m pip install .   (needs a non-Homebrew, non-managed Python)
 scu install
 ```
+
+Requires Python ≥ 3.9 (≥ 3.10 for the bundled local grounding model). On
+macOS `brew install python@3.12 pipx` covers everything.
 
 `scu install` walks you through it:
 
