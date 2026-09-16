@@ -51,14 +51,48 @@ def ensure_tesseract(assume_yes: bool = False) -> bool:
     return False
 
 
+def _venv_pip_install(pkg: str) -> bool:
+    """pip install into the interpreter running scu. pipx venvs ship without
+    pip, so bootstrap it via ensurepip first when needed."""
+    has_pip = (
+        subprocess.run(
+            [sys.executable, "-m", "pip", "--version"], capture_output=True
+        ).returncode
+        == 0
+    )
+    if not has_pip:
+        subprocess.run([sys.executable, "-m", "ensurepip"], capture_output=True)
+        has_pip = (
+            subprocess.run(
+                [sys.executable, "-m", "pip", "--version"], capture_output=True
+            ).returncode
+            == 0
+        )
+    if not has_pip:
+        return False
+    return (
+        subprocess.run([sys.executable, "-m", "pip", "install", pkg]).returncode
+        == 0
+    )
+
+
 def ensure_mlx_vlm() -> bool:
     if grounding.local_installed():
         return True
     print("Installing mlx-vlm (local grounding engine)...")
-    r = subprocess.run(
-        [sys.executable, "-m", "pip", "install", "mlx-vlm"],
-    )
-    return r.returncode == 0 and grounding.local_installed()
+    installed = False
+    if "pipx" in sys.prefix and shutil.which("pipx"):
+        pkg = os.path.basename(sys.prefix.rstrip(os.sep))
+        installed = (
+            subprocess.run(["pipx", "inject", pkg, "mlx-vlm"]).returncode == 0
+        )
+    if not installed:
+        installed = _venv_pip_install("mlx-vlm")
+    if installed:
+        import importlib
+
+        importlib.invalidate_caches()
+    return installed and grounding.local_installed()
 
 
 def download_model(model: str) -> bool:
