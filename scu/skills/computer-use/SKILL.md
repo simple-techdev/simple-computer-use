@@ -101,4 +101,5 @@ orange glow brightens on the display you're currently using.
 
 `scu doctor` checks permissions (Screen Recording, Accessibility on macOS),
 the grounding endpoint, OCR, and the overlay. Run it first when a command
-errors.
+errors. If the glow is ever stuck (e.g. your session crashed), tell the user
+to run `scu session end` — it also auto-stops after 10 idle minutes.

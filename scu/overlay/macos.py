@@ -20,6 +20,7 @@ from scu import state
 ORANGE = AppKit.NSColor.colorWithCalibratedRed_green_blue_alpha_
 ACCENT = (1.0, 0.55, 0.0)
 BADGE_OFFSET = (14.0, -40.0)  # relative to pointer, AppKit bottom-left coords
+IDLE_TIMEOUT_S = 600  # exit if no tool has updated state for 10 minutes
 
 
 class GlowView(AppKit.NSView):
@@ -221,7 +222,12 @@ class OverlayController(AppKit.NSObject):
 
     def tick_(self, timer):
         st = state.read()
-        if not st.get("session"):
+        # Exit when the session ends OR the agent went away without ending it
+        # (no state writes for IDLE_TIMEOUT_S — every action updates it).
+        if not st.get("session") or (
+            time.time() - st.get("updated", 0) > IDLE_TIMEOUT_S
+        ):
+            state.update(session=False)
             AppKit.NSApplication.sharedApplication().terminate_(None)
             return
         self._sync_glow_windows(st.get("screens") or {})

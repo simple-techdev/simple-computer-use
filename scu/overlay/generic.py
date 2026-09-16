@@ -11,6 +11,7 @@ import tkinter as tk
 from scu import state
 
 ORANGE = "#ff8c00"
+IDLE_TIMEOUT_S = 600  # exit if no tool has updated state for 10 minutes
 
 
 def run():
@@ -58,7 +59,10 @@ def run():
 
     def tick():
         st = state.read()
-        if not st.get("session"):
+        if not st.get("session") or (
+            time.time() - st.get("updated", 0) > IDLE_TIMEOUT_S
+        ):
+            state.update(session=False)
             root.destroy()
             return
 

@@ -118,7 +118,8 @@ being worked on.
 - Actions run as your user with your permissions — point the agent at a
   screen you're comfortable with it driving.
 - The glow/badge exist so automation is never invisible; end any session
-  with `scu session end`.
+  with `scu session end` — if an agent quits without ending it, the overlay
+  stops itself after 10 minutes of inactivity.
 - Moving the pointer to a screen corner aborts the in-flight action
   (pyautogui failsafe).
 - The skill doc instructs agents to verify every action with a fresh
